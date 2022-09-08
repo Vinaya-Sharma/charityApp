@@ -1,0 +1,143 @@
+[
+  { "type": "constructor", "payable": false, "inputs": [] },
+  { "type": "error", "name": "CHARITY_charityOwnerCanNotDonate", "inputs": [] },
+  { "type": "error", "name": "CHARITY_errorTransferingFunds", "inputs": [] },
+  { "type": "error", "name": "CHARITY_maxCharityAmountReached", "inputs": [] },
+  { "type": "error", "name": "CHARITY_missingArguments", "inputs": [] },
+  { "type": "error", "name": "CHARITY_noCharityFound", "inputs": [] },
+  { "type": "error", "name": "CHARITY_notCharityOwner", "inputs": [] },
+  { "type": "error", "name": "CHARITY_zeroFunds", "inputs": [] },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "charityCreated",
+    "inputs": [
+      { "type": "string", "name": "name", "indexed": false },
+      { "type": "address", "name": "creator", "indexed": true },
+      { "type": "string", "name": "description", "indexed": false },
+      { "type": "uint256", "name": "fundedAmount", "indexed": false },
+      { "type": "uint256", "name": "goal", "indexed": false },
+      { "type": "address[]", "name": "funders", "indexed": false },
+      { "type": "string", "name": "mainImage", "indexed": false },
+      { "type": "uint256", "name": "id", "indexed": true }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "charityFunded",
+    "inputs": [
+      { "type": "uint256", "name": "id", "indexed": false },
+      { "type": "address", "name": "owner", "indexed": false },
+      { "type": "address", "name": "funder", "indexed": false },
+      { "type": "uint256", "name": "fundedAmount", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "fundsWithdrawn",
+    "inputs": [
+      { "type": "address", "name": "owner", "indexed": false },
+      { "type": "uint256", "name": "id", "indexed": false }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "createCharity",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      { "type": "string", "name": "_name" },
+      { "type": "string", "name": "_description" },
+      { "type": "uint256", "name": "_goal" },
+      { "type": "string", "name": "_image" }
+    ],
+    "outputs": [{ "type": "uint256" }]
+  },
+  {
+    "type": "function",
+    "name": "fundCharity",
+    "constant": false,
+    "stateMutability": "payable",
+    "payable": true,
+    "inputs": [
+      { "type": "address", "name": "_owner" },
+      { "type": "uint256", "name": "_id" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "getCharities",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      { "type": "address", "name": "_owner" },
+      { "type": "uint256", "name": "_id" }
+    ],
+    "outputs": [
+      {
+        "type": "tuple",
+        "components": [
+          { "type": "string", "name": "name" },
+          { "type": "address", "name": "owner" },
+          { "type": "string", "name": "description" },
+          { "type": "uint256", "name": "fundedAmount" },
+          { "type": "uint256", "name": "goal" },
+          { "type": "address[]", "name": "funders" },
+          { "type": "uint256", "name": "id" },
+          { "type": "string", "name": "mainImage" }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getCompletedCharities",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      { "type": "address", "name": "_owner" },
+      { "type": "uint256", "name": "_id" }
+    ],
+    "outputs": [
+      {
+        "type": "tuple",
+        "components": [
+          { "type": "string", "name": "name" },
+          { "type": "address", "name": "owner" },
+          { "type": "string", "name": "description" },
+          { "type": "uint256", "name": "fundedAmount" },
+          { "type": "uint256", "name": "goal" },
+          { "type": "address[]", "name": "funders" },
+          { "type": "uint256", "name": "id" },
+          { "type": "string", "name": "mainImage" }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getCurrentId",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "uint256" }]
+  },
+  {
+    "type": "function",
+    "name": "withdrawFunds",
+    "constant": false,
+    "stateMutability": "payable",
+    "payable": true,
+    "inputs": [
+      { "type": "address", "name": "_owner" },
+      { "type": "uint256", "name": "_id" }
+    ],
+    "outputs": []
+  }
+]

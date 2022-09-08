@@ -1,0 +1,13 @@
+type activeCharity @entity {
+  id: ID!
+  idNum: BigInt!
+  name: String! # string
+  creator: Bytes! # address
+  description: String!
+  fundedAmount: BigInt!
+  goal: BigInt!
+  funders: [Bytes!]
+  completed: Boolean
+  createdAt: BigInt!
+  mainImage: String!
+}

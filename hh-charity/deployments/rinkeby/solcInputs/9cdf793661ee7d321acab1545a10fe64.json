@@ -1,0 +1,35 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/Charity.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.9;\n\ncontract Charity {\n    //error codes\n    error CHARITY_maxCharityAmountReached();\n    error CHARITY_zeroFunds();\n    error CHARITY_noCharityFound();\n    error CHARITY_notCharityOwner();\n    error CHARITY_errorTransferingFunds();\n\n    //events\n    event charityCreated(\n        address indexed creator,\n        uint256 indexed id,\n        string description,\n        uint256 goal\n    );\n\n    event charityFunded(\n        uint256 id,\n        address owner,\n        address funder,\n        uint256 fundedAmount\n    );\n\n    event fundsWithdrawn(address owner, uint256 id);\n\n    // defines a charity strucuture\n    struct aCharity {\n        string name;\n        address owner;\n        string description;\n        uint256 fundedAmount;\n        uint256 goal;\n        address[] funders;\n        uint256 id;\n    }\n\n    uint256 currentId;\n\n    mapping(address => mapping(uint256 => aCharity)) public charities;\n    mapping(address => mapping(uint256 => aCharity)) public completedCharities;\n\n    //functions\n    constructor() {\n        currentId = 0;\n    }\n\n    function createCharity(\n        string memory _name,\n        string memory _description,\n        uint256 _goal\n    ) public returns (uint256) {\n        currentId++;\n        address requester = msg.sender;\n        // if (charities[requester].length > 3) {\n        //     revert maxCharityAmountReached();\n        // }\n\n        address[] memory fakeFunders;\n        aCharity memory newCharity = aCharity({\n            name: _name,\n            owner: requester,\n            description: _description,\n            fundedAmount: uint256(0),\n            goal: _goal,\n            funders: fakeFunders,\n            id: currentId\n        });\n\n        charities[requester][currentId] = newCharity;\n        emit charityCreated(requester, currentId, _description, _goal);\n        return (currentId);\n    }\n\n    function fundCharity(address _owner, uint256 _id) public payable {\n        charities[_owner][_id].funders.push(msg.sender);\n        charities[_owner][_id].fundedAmount += msg.value;\n\n        emit charityFunded(_id, _owner, msg.sender, msg.value);\n    }\n\n    function withdrawFunds(address _owner, uint256 _id) public payable {\n        address owner = msg.sender;\n        if (owner != _owner) {\n            revert CHARITY_notCharityOwner();\n        }\n\n        aCharity memory selectedCharity = charities[_owner][_id];\n\n        if (selectedCharity.id == 0) {\n            revert CHARITY_noCharityFound();\n        }\n\n        delete charities[_owner][_id];\n        uint256 funds = selectedCharity.fundedAmount;\n        completedCharities[_owner][_id] = selectedCharity;\n\n        if (funds <= 0) {\n            revert CHARITY_zeroFunds();\n        }\n\n        //transfer funds on withdrawal\n        (bool success, ) = payable(owner).call{value: funds}(\"\");\n        if (!success) {\n            revert CHARITY_errorTransferingFunds();\n        }\n        emit fundsWithdrawn(_owner, _id);\n    }\n\n    //retrieval functions\n    function getCurrentId() public view returns (uint256) {\n        return currentId;\n    }\n\n    function getCharities(address _owner, uint256 _id)\n        public\n        view\n        returns (aCharity memory)\n    {\n        return charities[_owner][_id];\n    }\n\n    function getCompletedCharities(address _owner, uint256 _id)\n        public\n        view\n        returns (aCharity memory)\n    {\n        return completedCharities[_owner][_id];\n    }\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": false,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}

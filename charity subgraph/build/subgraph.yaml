@@ -1,0 +1,31 @@
+specVersion: 0.0.4
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Charity
+    network: rinkeby
+    source:
+      address: "0x8f86d2Ea8b9db37C229E87D28D35749D15fd574C"
+      abi: Charity
+      startBlock: 11329222
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - charityCreated
+        - charityFunded
+        - fundsWithdrawn
+      abis:
+        - name: Charity
+          file: Charity/abis/Charity.json
+      eventHandlers:
+        - event: charityCreated(string,indexed
+            address,string,uint256,uint256,address[],string,indexed uint256)
+          handler: handlecharityCreated
+        - event: charityFunded(uint256,address,address,uint256)
+          handler: handlecharityFunded
+        - event: fundsWithdrawn(address,uint256)
+          handler: handlefundsWithdrawn
+      file: Charity/Charity.wasm

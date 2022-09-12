@@ -6,3 +6,4 @@ Techstack
 - Solidity 
 - Chai
 - Graph Ql
+- Next.Js
